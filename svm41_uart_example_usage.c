@@ -1,9 +1,4 @@
 /*
- * SHDLC-Generator: 0.8.2
- * Yaml Version: 0.4.0
- * Template Version: 0.7.0-20-gf035cde
- */
-/*
  * Copyright (c) 2021, Sensirion AG
  * All rights reserved.
  *
@@ -40,12 +35,11 @@
 #include "sensirion_uart_hal.h"
 #include "svm41_uart.h"
 
-/**
- * TO USE CONSOLE OUTPUT (PRINTF) AND PLATFORM
+/*
+ * TO USE CONSOLE OUTPUT (PRINTF) YOU MAY NEED TO ADAPT THE INCLUDE ABOVE OR
+ * DEFINE IT ACCORDING TO YOUR PLATFORM:
+ * #define printf(...)
  */
-//#define printf(...)
-
-// TODO: DRIVER_GENERATOR Add missing commands and make prints more pretty
 
 int main(void) {
     int16_t error = 0;
@@ -56,31 +50,31 @@ int main(void) {
         return error;
     }
 
-    unsigned char serial_number[255];
-    uint8_t serial_number_size = 255;
+    error = svm41_device_reset();
+    if (error) {
+        printf("Error executing svm41_device_reset(): %i\n", error);
+    }
 
+    uint8_t serial_number[32];
+    uint8_t serial_number_size = 32;
     error = svm41_get_serial_number(serial_number, serial_number_size);
-
     if (error) {
         printf("Error executing svm41_get_serial_number(): %i\n", error);
     } else {
         printf("Serial number: %s\n", serial_number);
     }
 
-    unsigned char product_type[255];
-    uint8_t product_type_size = 255;
-
+    uint8_t product_type[32];
+    uint8_t product_type_size = 32;
     error = svm41_get_product_type(product_type, product_type_size);
-
     if (error) {
         printf("Error executing svm41_get_product_type(): %i\n", error);
     } else {
         printf("Product type: %s\n", product_type);
     }
 
-    unsigned char product_name[255];
-    uint8_t product_name_size = 255;
-
+    uint8_t product_name[32];
+    uint8_t product_name_size = 32;
     error = svm41_get_product_name(product_name, product_name_size);
 
     if (error) {
@@ -96,7 +90,6 @@ int main(void) {
     uint8_t hardware_minor;
     uint8_t protocol_major;
     uint8_t protocol_minor;
-
     error = svm41_get_version(&firmware_major, &firmware_minor, &firmware_debug,
                               &hardware_major, &hardware_minor, &protocol_major,
                               &protocol_minor);
@@ -104,29 +97,55 @@ int main(void) {
     if (error) {
         printf("Error executing svm41_get_version(): %i\n", error);
     } else {
-        printf("Firmware major: %u\n", firmware_major);
-        printf("Firmware minor: %u\n", firmware_minor);
-        printf("Firmware debug: %i\n", firmware_debug);
-        printf("Hardware major: %u\n", hardware_major);
-        printf("Hardware minor: %u\n", hardware_minor);
-        printf("Protocol major: %u\n", protocol_major);
-        printf("Protocol minor: %u\n", protocol_minor);
+        printf("Firmware: %i.%i Debug: %i\n", firmware_major, firmware_minor,
+               firmware_debug);
+        printf("Hardware: %i.%i\n", hardware_major, hardware_minor);
+        printf("Protocol: %i.%i\n", protocol_major, protocol_minor);
+    }
+
+    if (firmware_major < 2) {
+        printf("Your SVM41 firmware is out of date!\n");
+    } else {
+        uint8_t t_offset_buffer[2];
+        uint8_t t_offset_size = 2;
+        error = svm41_get_temperature_offset_for_rht_measurements(
+            &t_offset_buffer[0], t_offset_size);
+        int16_t t_offset =
+            sensirion_common_bytes_to_int16_t(&t_offset_buffer[0]);
+        if (error) {
+            printf("Error executing "
+                   "svm41_get_temperature_offset_for_rht_measurements(): %i\n",
+                   error);
+        } else {
+            printf("Temperature Offset: %i ticks\n", t_offset);
+        }
     }
 
     // Start Measurement
-
     error = svm41_start_measurement();
-
     if (error) {
         printf("Error executing svm41_start_measurement(): %i\n", error);
     }
 
     for (;;) {
         // Read Measurement
-        // TODO: DRIVER_GENERATOR check and update measurement interval
         sensirion_uart_hal_sleep_usec(1000000);
-        // TODO: DRIVER_GENERATOR Add scale and offset to printed measurement
-        // values
+        int16_t humidity;
+        int16_t temperature;
+        int16_t voc_index;
+        int16_t nox_index;
+        error = svm41_read_measured_values_as_integers(&humidity, &temperature,
+                                                       &voc_index, &nox_index);
+        if (error) {
+            printf("Error executing svm41_read_measured_values_as_integers(): "
+                   "%i\n",
+                   error);
+        } else {
+            printf("Humidity: %i milli %% RH\n", humidity * 10);
+            printf("Temperature: %i milli °C\n", (temperature >> 1) * 10);
+            printf("VOC index: %i (index * 10)\n", voc_index);
+            printf("NOx index: %i (index * 10)\n", nox_index);
+        }
     }
 
     error = svm41_stop_measurement();
