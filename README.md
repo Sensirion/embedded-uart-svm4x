@@ -1,3 +1,10 @@
+# Sensirion Embedded UART SVM41 Driver
+
+This is a generic embedded driver for the [Sensirion SVM41 VOC Sensor](https://www.sensirion.com/en/environmental-sensors/evaluation-kit-sek-svm41/).
+It enables developers to communicate with the SVM41 sensor on different hardware platforms by only adapting the UART communication related source files.
+
+[<center><img src="images/SVM4x.png" width="500px"></center>](https://www.sensirion.com/en/environmental-sensors/evaluation-kit-sek-svm41/)
+
 # Getting started
 
 ## Implement the UART Interface
@@ -54,7 +61,7 @@ Here we demonstrate the procedure for Linux based platforms:
 1. Open up a terminal.
 2. Navigate to the directory where this README is located.
 3. Run `make` (this compiles the example code into one executable binary).
-4. Run the compiled executable with `./[SENSORNAME]_uart_example_usage`
+4. Run the compiled executable with `./svm41_uart_example_usage`
 5. Now you should see the first measurement values appear in your terminal. As
    a next step you can adjust the example usage file or write your own main
    function to use the sensor.
