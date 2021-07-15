@@ -34,7 +34,8 @@ test:
   tags: [mso-sw-testbed-2]
   script:
     - cd tests/
-    - make test
+# TODO There is no SVM41 attached to the testbed yet
+#    -  make test
 
 TODO_check:
   stage: validate
