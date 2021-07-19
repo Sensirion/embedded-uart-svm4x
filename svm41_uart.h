@@ -118,20 +118,18 @@ int16_t svm41_read_measured_raw_values(int16_t* raw_humidity,
                                        uint16_t* raw_nox_ticks);
 
 /**
- * svm41_get_temperature_offset_for_rht_measurements() - Gets the T-Offset for
- * the temperature compensation of the RHT algorithm.
+ * svm41_get_temperature_offset_for_rht_measurements() - Gets the T-Offset
+ * for the temperature compensation of the RHT algorithm.
  *
- * @param t_offset Temperature offset which is used for the RHT measurements.
- * Firmware versions prior to 2.0 will return a float value (4 bytes). For
- * firmware version >= 2.0 an int16 value (2 bytes) is returned. Float
- * temperature values are in degrees celsius with no scaling. Integer
- * temperature values are in degrees celsius with a scaling of 200.
+ * @param t_offset Temperature offset which is used for the RHT measurements as
+ * an int16 value (2 bytes) in degrees celsius with a scaling of 200.
+ *
+ * @note Only SVM41 firmware versions >= 2.0 are supported. Please update your
+ * SVM41 module if necessary.
  *
  * @return 0 on success, an error code otherwise
  */
-int16_t
-svm41_get_temperature_offset_for_rht_measurements(uint8_t* t_offset,
-                                                  uint8_t t_offset_size);
+int16_t svm41_get_temperature_offset_for_rht_measurements(int16_t* t_offset);
 
 /**
  * svm41_get_voc_tuning_parameters() - Gets the currently set parameters for
@@ -204,23 +202,23 @@ int16_t svm41_get_nox_tuning_parameters(int16_t* nox_index_offset,
 int16_t svm41_store_nv_data(void);
 
 /**
- * svm41_set_temperature_offset_for_rht_measurements() - Sets the T-Offset for
- * the temperature compensation of the RHT algorithm.
+ * svm41_set_temperature_offset_for_rht_measurements() - Sets the T-Offset
+ * for the temperature compensation of the RHT algorithm.
  *
  * @note Execute the store command after writing the parameter to store it in
  * the non-volatile memory of the device otherwise the parameter will be reset
  * upton a device reset.
  *
- * @param t_offset Temperature offset in degrees celsius. Accepted data formats
- * are either a float value (4 bytes) or an int16 value (2 bytes). Float
- * temperature values are in degrees celsius with no scaling. Integer
- * temperature values are in degrees celsius with a scaling of 200.
+ * @param t_offset Temperature offset which is used for the RHT measurements as
+ * an int16 value (2 bytes) in degrees celsius with a scaling of 200.
+ *
+ * @note Only SVM41 firmware versions >= 2.0 are supported. Please update your
+ * SVM41 module if necessary.
  *
  * @return 0 on success, an error code otherwise
  */
 int16_t
-svm41_set_temperature_offset_for_rht_measurements(const uint8_t* t_offset,
-                                                  uint8_t t_offset_size);
+svm41_set_temperature_offset_for_rht_measurements(const int16_t t_offset);
 
 /**
  * svm41_set_voc_tuning_parameters() - Sets parameters to customize the VOC

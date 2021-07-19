@@ -140,9 +140,7 @@ int16_t svm41_read_measured_raw_values(int16_t* raw_humidity,
     return NO_ERROR;
 }
 
-int16_t
-svm41_get_temperature_offset_for_rht_measurements(uint8_t* t_offset,
-                                                  uint8_t t_offset_size) {
+int16_t svm41_get_temperature_offset_for_rht_measurements(int16_t* t_offset) {
     struct sensirion_shdlc_rx_header header;
     uint8_t buffer[20];
     struct sensirion_shdlc_buffer frame;
@@ -162,7 +160,7 @@ svm41_get_temperature_offset_for_rht_measurements(uint8_t* t_offset,
     if (error) {
         return error;
     }
-    sensirion_common_copy_bytes(&buffer[0], t_offset, t_offset_size);
+    *t_offset = sensirion_common_bytes_to_int16_t(&buffer[0]);
     return NO_ERROR;
 }
 
@@ -252,8 +250,7 @@ int16_t svm41_store_nv_data(void) {
 }
 
 int16_t
-svm41_set_temperature_offset_for_rht_measurements(const uint8_t* t_offset,
-                                                  uint8_t t_offset_size) {
+svm41_set_temperature_offset_for_rht_measurements(const int16_t t_offset) {
     struct sensirion_shdlc_rx_header header;
     uint8_t buffer[16];
     struct sensirion_shdlc_buffer frame;
@@ -261,7 +258,7 @@ svm41_set_temperature_offset_for_rht_measurements(const uint8_t* t_offset,
                                 3);
     sensirion_shdlc_add_uint8_t_to_frame(&frame, 0x81);
 
-    sensirion_shdlc_add_bytes_to_frame(&frame, t_offset, t_offset_size);
+    sensirion_shdlc_add_int16_t_to_frame(&frame, t_offset);
 
     sensirion_shdlc_finish_frame(&frame);
     int16_t error = sensirion_shdlc_tx_frame(&frame);

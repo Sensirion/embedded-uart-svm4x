@@ -103,22 +103,21 @@ int main(void) {
         printf("Protocol: %i.%i\n", protocol_major, protocol_minor);
     }
 
-    if (firmware_major < 2) {
-        printf("Your SVM41 firmware is out of date!\n");
+    error = svm41_set_temperature_offset_for_rht_measurements(0);
+    if (error) {
+        printf("Error executing "
+               "svm41_set_temperature_offset_for_rht_measurements(): %i\n",
+               error);
+    }
+
+    int16_t t_offset;
+    error = svm41_get_temperature_offset_for_rht_measurements(&t_offset);
+    if (error) {
+        printf("Error executing "
+               "svm41_get_temperature_offset_for_rht_measurements(): %i\n",
+               error);
     } else {
-        uint8_t t_offset_buffer[2];
-        uint8_t t_offset_size = 2;
-        error = svm41_get_temperature_offset_for_rht_measurements(
-            &t_offset_buffer[0], t_offset_size);
-        int16_t t_offset =
-            sensirion_common_bytes_to_int16_t(&t_offset_buffer[0]);
-        if (error) {
-            printf("Error executing "
-                   "svm41_get_temperature_offset_for_rht_measurements(): %i\n",
-                   error);
-        } else {
-            printf("Temperature Offset: %i ticks\n", t_offset);
-        }
+        printf("Temperature Offset: %i milli °C\n", (t_offset >> 1) * 10);
     }
 
     // Start Measurement

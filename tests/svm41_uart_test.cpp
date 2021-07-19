@@ -85,7 +85,7 @@ TEST (SVM41_Tests, SVM41_Test_read_measured_values_as_integers) {
     error = svm41_start_measurement();
     CHECK_EQUAL_ZERO_TEXT(error, "svm41_start_measurement");
 
-    sensirion_i2c_hal_sleep_usec(1000000);
+    sensirion_uart_hal_sleep_usec(1000000);
 
     error = svm41_read_measured_values_as_integers(&humidity, &temperature,
                                                    &voc_index, &nox_index);
@@ -109,7 +109,7 @@ TEST (SVM41_Tests, SVM41_Test_read_measured_raw_values) {
     error = svm41_start_measurement();
     CHECK_EQUAL_ZERO_TEXT(error, "svm41_start_measurement");
 
-    sensirion_i2c_hal_sleep_usec(1000000);
+    sensirion_uart_hal_sleep_usec(1000000);
 
     error = svm41_read_measured_raw_values(&raw_humidity, &raw_temperature,
                                            &raw_voc_ticks, &raw_nox_ticks);
@@ -125,10 +125,8 @@ TEST (SVM41_Tests, SVM41_Test_read_measured_raw_values) {
 
 TEST (SVM41_Tests, SVM41_Test_get_temperature_offset_for_rht_measurements) {
     int16_t error;
-    uint8_t t_offset[2];
-    uint8_t t_offset_size = 2;
-    error = svm41_get_temperature_offset_for_rht_measurements(&t_offset[0],
-                                                              t_offset_size);
+    int16_t t_offset;
+    error = svm41_get_temperature_offset_for_rht_measurements(&t_offset);
     CHECK_EQUAL_ZERO_TEXT(error,
                           "svm41_get_temperature_offset_for_rht_measurements");
     printf("T offset: %i\n", t_offset);
@@ -137,20 +135,14 @@ TEST (SVM41_Tests, SVM41_Test_get_temperature_offset_for_rht_measurements) {
 TEST (SVM41_Tests, SVM41_Test_temperature_offset_for_rht_measurements) {
     int16_t error;
     int16_t expected = 420;
-    uint8_t t_offset_buffer[2];
-    uint8_t t_offset_size = 2;
-    sensirion_common_int16_t_to_bytes(expected, t_offset_buffer);
-    error = svm41_set_temperature_offset_for_rht_measurements(
-        &t_offset_buffer[0], t_offset_size);
+    error = svm41_set_temperature_offset_for_rht_measurements(expected);
     CHECK_EQUAL_ZERO_TEXT(error,
                           "svm41_set_temperature_offset_for_rht_measurements");
 
-    uint8_t t_offset_actual[2];
-    error = svm41_get_temperature_offset_for_rht_measurements(
-        &t_offset_actual[0], t_offset_size);
+    int16_t actual = 0;
+    error = svm41_get_temperature_offset_for_rht_measurements(&actual);
     CHECK_EQUAL_ZERO_TEXT(error,
                           "svm41_get_temperature_offset_for_rht_measurements");
-    uint16_t actual = sensirion_common_bytes_to_int16_t(&t_offset_actual[0]);
     CHECK_EQUAL(expected, actual)
 }
 
