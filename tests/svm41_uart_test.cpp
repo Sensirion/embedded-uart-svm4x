@@ -153,22 +153,25 @@ TEST (SVM41_Tests, SVM41_Test_set_n_get_voc_algorithm_tuning_parameters) {
     int16_t exp_learning_time_gain_hours = 2;
     int16_t exp_gating_max_duration_minutes = 181;
     int16_t exp_std_initial = 51;
+    int16_t exp_gain_factor = 120;
     int16_t voc_index_offset = 100;
     int16_t learning_time_offset_hours = 12;
     int16_t learning_time_gain_hours = 100;
     int16_t gating_max_duration_minutes = 180;
     int16_t std_initial = 50;
+    int16_t gain_factor = 230;
     error = svm41_set_voc_tuning_parameters(
         exp_voc_index_offset, exp_learning_time_offset_hours,
         exp_learning_time_gain_hours, exp_gating_max_duration_minutes,
-        exp_std_initial);
+        exp_std_initial, exp_gain_factor);
     CHECK_EQUAL_ZERO_TEXT(error, "svm41_set_voc_tuning_parameters");
 
     sensirion_uart_hal_sleep_usec(10000);
 
     error = svm41_get_voc_tuning_parameters(
         &voc_index_offset, &learning_time_offset_hours,
-        &learning_time_gain_hours, &gating_max_duration_minutes, &std_initial);
+        &learning_time_gain_hours, &gating_max_duration_minutes, &std_initial,
+        &gain_factor);
     CHECK_EQUAL_ZERO_TEXT(error, "svm41_get_voc_tuning_parameters");
     printf("Voc index offset: %i\n", voc_index_offset);
     printf("Learning time offset hours: %i\n", learning_time_offset_hours);
@@ -179,7 +182,6 @@ TEST (SVM41_Tests, SVM41_Test_set_n_get_voc_algorithm_tuning_parameters) {
     CHECK_TRUE_TEXT(
         voc_index_offset == exp_voc_index_offset,
         "SVM41_Test_set_voc_algorithm_tuning_parameters: voc_index_offset");
-
     CHECK_TRUE_TEXT(learning_time_offset_hours ==
                         exp_learning_time_offset_hours,
                     "SVM41_Test_set_voc_algorithm_tuning_parameters: "
@@ -194,6 +196,9 @@ TEST (SVM41_Tests, SVM41_Test_set_n_get_voc_algorithm_tuning_parameters) {
     CHECK_TRUE_TEXT(
         std_initial == exp_std_initial,
         "SVM41_Test_set_voc_algorithm_tuning_parameters: std_initial");
+    CHECK_TRUE_TEXT(
+        gain_factor == exp_gain_factor,
+        "SVM41_Test_set_voc_algorithm_tuning_parameters: gain_factor");
 }
 
 TEST (SVM41_Tests, SVM41_Test_set_n_get_nox_algorithm_tuning_parameters) {
@@ -203,22 +208,25 @@ TEST (SVM41_Tests, SVM41_Test_set_n_get_nox_algorithm_tuning_parameters) {
     int16_t exp_learning_time_gain_hours = 2;
     int16_t exp_gating_max_duration_minutes = 181;
     int16_t exp_std_initial = 51;
+    int16_t exp_gain_factor = 132;
     int16_t nox_index_offset = 100;
     int16_t learning_time_offset_hours = 12;
     int16_t learning_time_gain_hours = 100;
     int16_t gating_max_duration_minutes = 180;
     int16_t std_initial = 50;
+    int16_t gain_factor = 230;
     error = svm41_set_nox_tuning_parameters(
         exp_nox_index_offset, exp_learning_time_offset_hours,
         exp_learning_time_gain_hours, exp_gating_max_duration_minutes,
-        exp_std_initial);
+        exp_std_initial, exp_gain_factor);
     CHECK_EQUAL_ZERO_TEXT(error, "svm41_set_nox_tuning_parameters");
 
     sensirion_uart_hal_sleep_usec(10000);
 
     error = svm41_get_nox_tuning_parameters(
         &nox_index_offset, &learning_time_offset_hours,
-        &learning_time_gain_hours, &gating_max_duration_minutes, &std_initial);
+        &learning_time_gain_hours, &gating_max_duration_minutes, &std_initial,
+        &gain_factor);
     CHECK_EQUAL_ZERO_TEXT(error, "svm41_get_nox_tuning_parameters");
     printf("nox index offset: %i\n", nox_index_offset);
     printf("Learning time offset hours: %i\n", learning_time_offset_hours);
@@ -244,6 +252,9 @@ TEST (SVM41_Tests, SVM41_Test_set_n_get_nox_algorithm_tuning_parameters) {
     CHECK_TRUE_TEXT(
         std_initial == exp_std_initial,
         "SVM41_Test_set_nox_algorithm_tuning_parameters: std_initial");
+    CHECK_TRUE_TEXT(
+        gain_factor == exp_gain_factor,
+        "SVM41_Test_set_nox_algorithm_tuning_parameters: gain_factor");
 }
 
 TEST (SVM41_Tests, SVM41_Test_store_nv_data) {
@@ -258,14 +269,6 @@ TEST (SVM41_Tests, SVM41_Test_set_voc_algorithm_state) {
     uint8_t state_size = 8;
     error = svm41_set_voc_state(&state[0], state_size);
     CHECK_EQUAL_ZERO_TEXT(error, "svm41_set_voc_state");
-}
-
-TEST (SVM41_Tests, SVM41_Test_set_nox_algorithm_state) {
-    int16_t error;
-    uint8_t state[8];
-    uint8_t state_size = 8;
-    error = svm41_set_nox_state(&state[0], state_size);
-    CHECK_EQUAL_ZERO_TEXT(error, "svm41_set_nox_state");
 }
 
 TEST (SVM41_Tests, SVM41_Test_get_version) {
