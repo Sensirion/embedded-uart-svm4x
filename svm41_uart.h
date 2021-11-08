@@ -136,7 +136,7 @@ int16_t svm41_get_temperature_offset_for_rht_measurements(int16_t* t_offset);
  * @param voc_index_offset VOC index representing typical (average) conditions.
  *
  * @param learning_time_offset_hours Time constant to estimate the VOC algorithm
- * gain from the history in hours. Past events will be forgotten after about
+ * offset from the history in hours. Past events will be forgotten after about
  * twice the learning time.
  *
  * @param learning_time_gain_hours Time constant to estimate the VOC algorithm
@@ -170,7 +170,7 @@ int16_t svm41_get_voc_tuning_parameters(int16_t* voc_index_offset,
  * @param nox_index_offset VOC index representing typical (average) conditions.
  *
  * @param learning_time_offset_hours Time constant to estimate the NOx algorithm
- * gain from the history in hours. Past events will be forgotten after about
+ * offset from the history in hours. Past events will be forgotten after about
  * twice the learning time.
  *
  * @param learning_time_gain_hours Time constant to estimate the NOx algorithm
