@@ -3,7 +3,7 @@
  *
  * SHDLC-Generator: 0.8.2
  * Yaml Version: 0.8.1
- * Template Version: 0.7.0-84-g1150250
+ * Template Version: 0.7.0-92-g227c1e2
  */
 /*
  * Copyright (c) 2021, Sensirion AG
@@ -46,7 +46,7 @@ extern "C" {
 #include "sensirion_config.h"
 
 /**
- * svm41_start_measurement() - Starts measurement in polling mode.
+ * svm41_start_measurement() - Starts continuous measurement in polling mode.
  *
  * @note This command is only available in idle mode.
  *
@@ -55,8 +55,8 @@ extern "C" {
 int16_t svm41_start_measurement(void);
 
 /**
- * svm41_stop_measurement() - Leaves the measurement mode and returns to the
- * idle mode.
+ * svm41_stop_measurement() - Stops the measurement mode and returns to idle
+ * mode.
  *
  * @note This command is only available in measurement mode.
  *
@@ -122,8 +122,7 @@ int16_t svm41_read_measured_raw_values(int16_t* raw_humidity,
  * the temperature compensation of the RHT algorithm.
  *
  * @param t_offset Temperature offset which is used for the RHT measurements.
- * Values are in degrees celsius with a scaling of 200. Thus the received value
- * must be divided by 200.
+ * Values are in degrees celsius with a scaling of 200.
  *
  * @return 0 on success, an error code otherwise
  */
@@ -175,7 +174,8 @@ int16_t svm41_get_voc_tuning_parameters(int16_t* voc_index_offset,
  *
  * @param learning_time_gain_hours Time constant to estimate the NOx algorithm
  * gain from the history in hours. Past events will be forgotten after about
- * twice the learning time.
+ * twice the learning time. Note that this value is not relevant for NOx
+ * algorithm type.
  *
  * @param gating_max_duration_minutes Maximum duration of gating in minutes
  * (freeze of estimator during high NOx index signal). Set to zero to disable
@@ -183,7 +183,8 @@ int16_t svm41_get_voc_tuning_parameters(int16_t* voc_index_offset,
  *
  * @param std_initial Initial estimate for standard deviation. Lower value
  * boosts events during initial learning period, but may result in larger
- * device-to-device variations.
+ * device-to-device variations. Note that this value is not relevant for NOx
+ * algorithm type.
  *
  * @param gain_factor Gain factor to amplify or to attenuate the NOx index
  * output.
@@ -213,9 +214,7 @@ int16_t svm41_store_nv_data(void);
  * the non-volatile memory of the device otherwise the parameter will be reset
  * upton a device reset.
  *
- * @param t_offset Temperature offset in degrees celsius. Accepted data formats
- * is a int16 value (2 bytes). Values are in degrees celsius with a scaling of
- * 200. Thus the provided value must be multiplied by 200.
+ * @param t_offset Temperature offset in degrees celsius with a scaling of 200.
  *
  * @return 0 on success, an error code otherwise
  */
@@ -273,7 +272,7 @@ int16_t svm41_set_voc_tuning_parameters(int16_t voc_index_offset,
  * upton a device reset.
  *
  * @param nox_index_offset NOx index representing typical (average) conditions.
- * Allowed values are in range 1..250. The default value is 100.
+ * Allowed values are in range 1..250. The default value is 1.
  *
  * @param learning_time_offset_hours Time constant to estimate the NOx algorithm
  * offset from the history in hours. Past events will be forgotten after about
@@ -283,17 +282,19 @@ int16_t svm41_set_voc_tuning_parameters(int16_t voc_index_offset,
  * @param learning_time_gain_hours Time constant to estimate the NOx algorithm
  * gain from the history in hours. Past events will be forgotten after about
  * twice the learning time. Allowed values are in range 1..1000. The default
- * value is 12 hours.
+ * value is 12 hours. Note that this value is not relevant for NOx algorithm
+ * type.
  *
  * @param gating_max_duration_minutes Maximum duration of gating in minutes
  * (freeze of estimator during high NOx index signal). Set to zero to disable
- * the gating. Allowed values are in range 0..3000. The default value is 180
+ * the gating. Allowed values are in range 0..3000. The default value is 720
  * minutes.
  *
  * @param std_initial Initial estimate for standard deviation. Lower value
  * boosts events during initial learning period, but may result in larger
  * device-to-device variations. Allowed values are in range 10..5000. The
- * default value is 50.
+ * default value is 50. Note that this value is not relevant for NOx algorithm
+ * type.
  *
  * @param gain_factor Gain factor to amplify or to attenuate the NOx index
  * output. Allowed values are in range 1..1000. The default value is 230.
@@ -313,8 +314,9 @@ int16_t svm41_set_nox_tuning_parameters(int16_t nox_index_offset,
  * short interruption, skipping initial learning phase. This command is only
  * available during measurement mode.
  *
- * @note This feature can only be used after at least 3 hours of continuous
- * operation.
+ * @note Retrieved values can only be used after at least 3 hours of continuous
+ * operation. Restoring the state by calling set voc state should not be done
+ * after interruptions of more than 10 minutes.
  *
  * @param state Current VOC algorithm state.
  *
