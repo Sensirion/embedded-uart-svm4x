@@ -1,9 +1,12 @@
-# Sensirion Embedded UART SVM41 Driver
+# Sensirion Embedded UART SVM4x Driver
 
-This is a generic embedded driver for the [Sensirion SVM41 Sensor Module](https://www.sensirion.com/my-sgp-ek/).
-It enables developers to communicate with the SVM41 sensor module on different hardware platforms by only adapting the UART communication related source files.
+This is a generic embedded driver for the [Sensirion SVM4x Evaluation Kit](https://www.sensirion.com/my-sgp-ek/).
+It enables developers to communicate with the SVM4x evaluation kit on different hardware platforms by only adapting the UART communication related source files.
 
-[<center><img src="images/SVM4x.png" width="500px"></center>](https://www.sensirion.com/en/environmental-sensors/evaluation-kit-sek-svm41/)
+The SVM4x evaluation kit covers evaluation of the SGP40 and SGP41 sensors.
+
+
+[<center><img src="images/SVM4x.png" width="500px"></center>](https://sensirion.com/my-sgp-ek)
 
 # Getting started
 
