@@ -1,1 +1,3 @@
-/svm4x_uart_example_usage
+/example-usage/svm4x_uart_example_usage
+/algorithm-tuning-example/svm4x_uart_algorithm_tuning_example
+/tests/svm4x-test-uart
