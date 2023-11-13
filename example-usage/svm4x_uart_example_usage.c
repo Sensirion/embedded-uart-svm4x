@@ -97,6 +97,7 @@ int main(void) {
     printf("hardware_minor: %u ", hardware_minor);
     printf("protocol_major: %u ", protocol_major);
     printf("protocol_minor: %u\n", protocol_minor);
+
     int16_t t_offset = 0;
     error = svm4x_get_temperature_offset_for_rht_measurements(&t_offset);
     if (error != NO_ERROR) {
@@ -105,7 +106,7 @@ int main(void) {
                error);
         return error;
     }
-    printf("t_offset: %i\n", t_offset);
+    printf("t_offset [degC with scaling factor 200]: %i\n", t_offset);
     error = svm4x_set_temperature_offset_for_rht_measurements(0);
     if (error != NO_ERROR) {
         printf("error executing set_temperature_offset_for_rht_measurements(): "
@@ -123,7 +124,7 @@ int main(void) {
     int16_t voc_index = 0;
     int16_t nox_index = 0;
     uint16_t repetition = 0;
-    for (repetition = 0; repetition < 50; repetition++) {
+    for (repetition = 0; repetition < 100; repetition++) {
         sensirion_hal_sleep_us(1000000);
         error = svm4x_read_measured_values_as_integers(&humidity, &temperature,
                                                        &voc_index, &nox_index);
@@ -132,10 +133,10 @@ int main(void) {
                    error);
             continue;
         }
-        printf("humidity: %i ", humidity);
-        printf("temperature: %i ", temperature);
-        printf("voc_index: %i ", voc_index);
-        printf("nox_index: %i\n", nox_index);
+        printf("humidity [RH with scaling 100]: %i ", humidity);
+        printf("temperature [°C with scaling 200]: %i ", temperature);
+        printf("voc_index (with scaling 10): %i ", voc_index);
+        printf("nox_index (with scaling 10): %i\n", nox_index);
     }
 
     error = svm4x_stop_measurement();

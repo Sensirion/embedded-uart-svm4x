@@ -110,7 +110,7 @@ int main(void) {
     int16_t voc_index = 0;
     int16_t nox_index = 0;
     uint16_t repetition = 0;
-    for (repetition = 0; repetition < 50; repetition++) {
+    for (repetition = 0; repetition < 100; repetition++) {
         sensirion_hal_sleep_us(1000000);
         error = svm4x_read_measured_values_as_integers(&humidity, &temperature,
                                                        &voc_index, &nox_index);
@@ -119,10 +119,10 @@ int main(void) {
                    error);
             continue;
         }
-        printf("humidity: %i ", humidity);
-        printf("temperature: %i ", temperature);
-        printf("voc_index: %i ", voc_index);
-        printf("nox_index: %i\n", nox_index);
+        printf("humidity [RH with scaling 100]: %i ", humidity);
+        printf("temperature [°C with scaling 200]: %i ", temperature);
+        printf("voc_index (with scaling 10): %i ", voc_index);
+        printf("nox_index (with scaling 10): %i\n", nox_index);
     }
 
     error = svm4x_stop_measurement();
