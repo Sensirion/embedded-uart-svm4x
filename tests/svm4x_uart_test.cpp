@@ -176,7 +176,9 @@ TEST (SVM4X_Tests, test_set_nox_tuning_parameters1) {
 
 TEST (SVM4X_Tests, test_set_voc_state1) {
     int16_t local_error = 0;
-    local_error = svm4x_set_voc_state((int32_t[8]){0, 0, 0, 0, 0, 0, 0, 0}, 8);
+    uint8_t state[8];
+    uint8_t state_size = 8;
+    local_error = svm4x_set_voc_state(&state[0], 8);
     CHECK_EQUAL_ZERO_TEXT(local_error, "set_voc_state");
 }
 
