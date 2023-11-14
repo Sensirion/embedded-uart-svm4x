@@ -58,7 +58,7 @@ int16_t sensirion_uart_hal_select_port(uint8_t port) {
  *
  * Return:      0 on success, an error code otherwise
  */
-int16_t sensirion_uart_hal_init() {
+int16_t sensirion_uart_hal_init(UartDescr port) {
     /* TODO: implement */
     return NOT_IMPLEMENTED_ERROR;
 }

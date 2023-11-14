@@ -29,63 +29,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SENSIRION_UART_HAL_H
-#define SENSIRION_UART_HAL_H
-
-#include "sensirion_config.h"
-#include "sensirion_uart_portdescriptor.h"
+#ifndef UART_TYPEDEF_H
+#define UART_TYPEDEF_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * sensirion_uart_hal_init() - initialize UART
- *
- * @port: platform dependent port descriptor, see
- * sensirion_uart_typedef.h for data type
- *
- * Return:      0 on success, an error code otherwise
- */
-int16_t sensirion_uart_hal_init(UartDescr port);
+// type of uart port descriptor (platform dependent)
+typedef const char* UartDescr;
 
-/**
- * sensirion_uart_hal_free() - release UART resources
- *
- * Return:      0 on success, an error code otherwise
- */
-int16_t sensirion_uart_hal_free();
+// definition of default port
+#define SERIAL_0 "/dev/ttyUSB0"
 
-/**
- * sensirion_uart_hal_tx() - transmit data over UART
- *
- * @data_len:   number of bytes to send
- * @data:       data to send
- * Return:      Number of bytes sent or a negative error code
- */
-int16_t sensirion_uart_hal_tx(uint16_t data_len, const uint8_t* data);
-
-/**
- * sensirion_uart_hal_rx() - receive data over UART
- *
- * @data_len:   max number of bytes to receive
- * @data:       Memory where received data is stored
- * Return:      Number of bytes received or a negative error code
- */
-int16_t sensirion_uart_hal_rx(uint16_t max_data_len, uint8_t* data);
-
-/**
- * Sleep for a given number of microseconds. The function should delay the
- * execution for at least the given time, but may also sleep longer.
- *
- * Despite the unit, a <10 millisecond precision is sufficient.
- *
- * @param useconds the sleep time in microseconds
- */
-void sensirion_uart_hal_sleep_usec(uint32_t useconds);
+// definition of serial port when connecting over UART pins
+// make sure to enable serial port in raspi-config
+// #define SERIAL_0 "/dev/serial0"
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* SENSIRION_UART_HAL_H */
+#endif
