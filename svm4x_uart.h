@@ -439,23 +439,6 @@ int16_t svm4x_set_nox_tuning_parameters(int16_t nox_index_offset,
 int16_t svm4x_get_voc_state(uint8_t* state, uint16_t state_size);
 
 /**
- * @brief svm4x_get_nox_state
- *
- * Gets the current NOx algorithm state. Retrieved values can be used to set the
- * NOx algorithm state to resume operation after a short interruption, skipping
- * initial learning phase. This command is only available during measurement
- * mode.
- *
- * @param[out] state Current NOx algorithm state.
- *
- * @note This feature can only be used after at least 3 hours of continuous
- * operation.
- *
- * @return error_code 0 on success, an error code otherwise.
- */
-int16_t svm4x_get_nox_state(uint8_t* state, uint16_t state_size);
-
-/**
  * @brief svm4x_set_voc_state
  *
  * Set previously retrieved VOC algorithm state to resume operation after a
@@ -470,22 +453,6 @@ int16_t svm4x_get_nox_state(uint8_t* state, uint16_t state_size);
  * @return error_code 0 on success, an error code otherwise.
  */
 int16_t svm4x_set_voc_state(const uint8_t* state, uint16_t state_size);
-
-/**
- * @brief svm4x_set_nox_state
- *
- * Set previously retrieved NOx algorithm state to resume operation after a
- * short interruption, skipping initial learning phase. This command is only
- * available in idle mode.
- *
- * @param[in] state Current NOx algorithm state.
- *
- * @note This feature should not be used after interruptions of more than 10
- * minutes.
- *
- * @return error_code 0 on success, an error code otherwise.
- */
-int16_t svm4x_set_nox_state(const uint8_t* state, uint16_t state_size);
 
 #ifdef __cplusplus
 }
