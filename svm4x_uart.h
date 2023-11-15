@@ -46,30 +46,6 @@ extern "C" {
 #include "sensirion_config.h"
 #define SVM4X_SHDLC_ADDR 0x00
 
-typedef enum {
-    SVM4x_GET_PRODUCT_TYPE_CMD_ID = 0xd0,
-    SVM4x_GET_PRODUCT_NAME_CMD_ID = 0xd0,
-    SVM4x_GET_SERIAL_NUMBER_CMD_ID = 0xd0,
-    SVM4x_GET_VERSION_CMD_ID = 0xd1,
-    SVM4x_DEVICE_RESET_CMD_ID = 0xd3,
-    SVM4x_GET_SYSTEM_UP_TIME_CMD_ID = 0x93,
-    SVM4x_START_MEASUREMENT_CMD_ID = 0x0,
-    SVM4x_STOP_MEASUREMENT_CMD_ID = 0x1,
-    SVM4x_READ_MEASURED_VALUES_AS_INTEGERS_CMD_ID = 0x3,
-    SVM4x_READ_MEASURED_RAW_VALUES_CMD_ID = 0x3,
-    SVM4x_GET_TEMPERATURE_OFFSET_FOR_RHT_MEASUREMENTS_CMD_ID = 0x60,
-    SVM4x_GET_VOC_TUNING_PARAMETERS_CMD_ID = 0x60,
-    SVM4x_GET_NOX_TUNING_PARAMETERS_CMD_ID = 0x60,
-    SVM4x_STORE_NV_DATA_CMD_ID = 0x60,
-    SVM4x_SET_TEMPERATURE_OFFSET_FOR_RHT_MEASUREMENTS_CMD_ID = 0x60,
-    SVM4x_SET_VOC_TUNING_PARAMETERS_CMD_ID = 0x60,
-    SVM4x_SET_NOX_TUNING_PARAMETERS_CMD_ID = 0x60,
-    SVM4x_GET_VOC_STATE_CMD_ID = 0x61,
-    SVM4x_GET_NOX_STATE_CMD_ID = 0x61,
-    SVM4x_SET_VOC_STATE_CMD_ID = 0x61,
-    SVM4x_SET_NOX_STATE_CMD_ID = 0x61,
-} cmd_id_t;
-
 /**
  * @brief svm4x_get_product_type
  *
@@ -439,23 +415,6 @@ int16_t svm4x_set_nox_tuning_parameters(int16_t nox_index_offset,
 int16_t svm4x_get_voc_state(uint8_t* state, uint16_t state_size);
 
 /**
- * @brief svm4x_get_nox_state
- *
- * Gets the current NOx algorithm state. Retrieved values can be used to set the
- * NOx algorithm state to resume operation after a short interruption, skipping
- * initial learning phase. This command is only available during measurement
- * mode.
- *
- * @param[out] state Current NOx algorithm state.
- *
- * @note This feature can only be used after at least 3 hours of continuous
- * operation.
- *
- * @return error_code 0 on success, an error code otherwise.
- */
-int16_t svm4x_get_nox_state(uint8_t* state, uint16_t state_size);
-
-/**
  * @brief svm4x_set_voc_state
  *
  * Set previously retrieved VOC algorithm state to resume operation after a
@@ -470,22 +429,6 @@ int16_t svm4x_get_nox_state(uint8_t* state, uint16_t state_size);
  * @return error_code 0 on success, an error code otherwise.
  */
 int16_t svm4x_set_voc_state(const uint8_t* state, uint16_t state_size);
-
-/**
- * @brief svm4x_set_nox_state
- *
- * Set previously retrieved NOx algorithm state to resume operation after a
- * short interruption, skipping initial learning phase. This command is only
- * available in idle mode.
- *
- * @param[in] state Current NOx algorithm state.
- *
- * @note This feature should not be used after interruptions of more than 10
- * minutes.
- *
- * @return error_code 0 on success, an error code otherwise.
- */
-int16_t svm4x_set_nox_state(const uint8_t* state, uint16_t state_size);
 
 #ifdef __cplusplus
 }

@@ -435,24 +435,6 @@ int16_t svm4x_get_voc_state(uint8_t* state, uint16_t state_size) {
     return local_error;
 }
 
-int16_t svm4x_get_nox_state(uint8_t* state, uint16_t state_size) {
-    struct sensirion_shdlc_rx_header header;
-    struct sensirion_shdlc_buffer frame;
-    int16_t local_error = NO_ERROR;
-    uint8_t* buffer_ptr = communication_buffer;
-    sensirion_shdlc_begin_frame(&frame, buffer_ptr, 0x61, SVM4X_SHDLC_ADDR, 1);
-    sensirion_shdlc_add_uint8_t_to_frame(&frame, 9);
-    sensirion_shdlc_finish_frame(&frame);
-    local_error = sensirion_shdlc_tx_frame(&frame);
-    if (local_error) {
-        return local_error;
-    }
-    sensirion_uart_hal_sleep_usec(50 * 1000);
-    local_error = sensirion_shdlc_rx_inplace(&frame, 8, &header);
-    sensirion_common_copy_bytes(&buffer_ptr[0], (uint8_t*)state, state_size);
-    return local_error;
-}
-
 int16_t svm4x_set_voc_state(const uint8_t* state, uint16_t state_size) {
     struct sensirion_shdlc_rx_header header;
     struct sensirion_shdlc_buffer frame;
@@ -460,25 +442,6 @@ int16_t svm4x_set_voc_state(const uint8_t* state, uint16_t state_size) {
     uint8_t* buffer_ptr = communication_buffer;
     sensirion_shdlc_begin_frame(&frame, buffer_ptr, 0x61, SVM4X_SHDLC_ADDR, 9);
     sensirion_shdlc_add_uint8_t_to_frame(&frame, 136);
-    sensirion_shdlc_add_bytes_to_frame(&frame, (uint8_t*)state, state_size);
-
-    sensirion_shdlc_finish_frame(&frame);
-    local_error = sensirion_shdlc_tx_frame(&frame);
-    if (local_error) {
-        return local_error;
-    }
-    sensirion_uart_hal_sleep_usec(50 * 1000);
-    local_error = sensirion_shdlc_rx_inplace(&frame, 0, &header);
-    return local_error;
-}
-
-int16_t svm4x_set_nox_state(const uint8_t* state, uint16_t state_size) {
-    struct sensirion_shdlc_rx_header header;
-    struct sensirion_shdlc_buffer frame;
-    int16_t local_error = NO_ERROR;
-    uint8_t* buffer_ptr = communication_buffer;
-    sensirion_shdlc_begin_frame(&frame, buffer_ptr, 0x61, SVM4X_SHDLC_ADDR, 9);
-    sensirion_shdlc_add_uint8_t_to_frame(&frame, 137);
     sensirion_shdlc_add_bytes_to_frame(&frame, (uint8_t*)state, state_size);
 
     sensirion_shdlc_finish_frame(&frame);
